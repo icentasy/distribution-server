@@ -6,7 +6,7 @@ class MySQL(object):
 		self.__cur = self.__conn.cursor()
 
 	def login(self, account, pw):
-		self.__cur.excute("select count(*) from user where id=%s and pw=%s" % (account, pw))
+		self.__cur.execute("select count(*) from user where id=%s and pw=%s" % (account, pw))
 		if self.__cur.fetchOne() == 1:
 			return True
 		else:
