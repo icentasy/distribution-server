@@ -14,7 +14,7 @@ class MySQL(object):
             return False
 
     def withdraw(self, account, cash, timestamp):
-        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)"
+        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (account, 2, cash, timestamp)) <= 0:
             self.__conn.rollback()
             return False, None
@@ -33,7 +33,7 @@ class MySQL(object):
         
 
     def deposite(self, account, cash, timestamp):
-        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)"
+        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (account, 3, cash, timestamp)) <= 0:
             self.__conn.rollback()
             return False, None
@@ -52,7 +52,7 @@ class MySQL(object):
         if self.__cur.execute("select count(*) from user where id=%s and name=%s" % (acID, acName)) <= 0:
             self.__conn.rollback()
             return False, None
-        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)"
+        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (account, 4, cash, timestamp)) <= 0:
             self.__conn.rollback()
             return False, None
@@ -66,7 +66,7 @@ class MySQL(object):
         if self.__cur.execute("update total set total=%s where id=%f" % (account, total - cash)) <= 0:
             self.__conn.rollback()
             return False, None
-        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)"
+        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (acID, 5, cash, timestamp)) <= 0:
             self.__conn.rollback()
             return False, None
