@@ -2,7 +2,7 @@ import MySQLdb
 
 class MySQL(object):
 	def __init__(self, db="bank", **kwargs):
-		self.__conn = MySQLdb.connect(kwargs)
+		self.__conn = MySQLdb.connect(host=host, port=port, user=user, passwd=passwd, db=db)
 		self.__cur = __conn.cursor()
 
 	def login(account, pw):
