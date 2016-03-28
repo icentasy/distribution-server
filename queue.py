@@ -38,6 +38,9 @@ class RedisQueue(object):
     def clear(self):
         return self.__db.delete(self.key)
 
+    def set(self, key, value):
+        return self.__db.set(key, value)
+
 if __name__ == '__main__':
     q = RedisQueue('test')
     q.put('a')
