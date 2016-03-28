@@ -14,8 +14,49 @@ while  True:
 	if req is None:
 		continue
 	print "get sources"
+	res = {"status":0, "errorMsg":"", "data": None}
+	resData = {"sum": 0}
 	reqJson = json.loads(req)
-	if reqJson.get("type") == 0:
-		print con.login(reqJson.get("id"), reqJson.get("pw"))
-		res = {"status":0}
-		requestQ.set("%s_%s" % (reqJson.get("id"), reqJson.get("timestamp")), json.dumps(res))
+	tradeType = reqJson.get("type")
+	account = reqJson.get("id")
+	pw = reqJson.get("pw")
+	timestamp = reqJson.get("timestamp")
+	data = reqJson.get("data")
+	if tradeType == 0:
+		res["status"] = con.login(account, pw)
+	elif tradeType == 2:
+		cash = data.get("cash")
+		status, total = con.withdraw(account, cash, timestamp)
+		res["status"] = status
+		resData["sum"] = total
+	elif tradeType == 3:
+		cash = data.get("cash")
+		status, total = con.deposite(account, cash, timestamp)
+		res["status"] = status
+		resData["sum"] = total
+	elif tradeType == 4:
+		cash = data.get("cash")
+		acID = data.get("acID")
+		acName = data.get("acName")
+		status, total = con.transfer(account, cash, timestamp, acID, acName)
+		res["status"] = status
+		resData["sum"] = total
+	elif tradeType == 6:
+		status, total = con.checkTotal(account)
+		res["status"] = status
+		resData["sum"] = total
+	elif tradeType == 7:
+		status, detail = con.checkDetail(account)
+		res["status"] = status
+		resData = []
+		for item in detail:
+			resData.append({
+				"type": item[1],
+				"cash": item[2],
+				"timestamp": item[3],
+				"transferid": item[4]
+				})
+	res["data"] = resData
+	requestQ.set("%s_%s" % (account, timestamp), json.dumps(res))
+
+
