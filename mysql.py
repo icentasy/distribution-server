@@ -3,7 +3,7 @@ import MySQLdb
 class MySQL(object):
 	def __init__(self, host, port, user, passwd, db="bank",):
 		self.__conn = MySQLdb.connect(host=host, port=port, user=user, passwd=passwd, db=db)
-		self.__cur = __conn.cursor()
+		self.__cur = self.__conn.cursor()
 
 	def login(account, pw):
 		self.__cur.excute("select count(*) from user where id=%s and pw=%s" % (account, pw))
