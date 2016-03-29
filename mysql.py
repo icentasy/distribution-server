@@ -70,7 +70,7 @@ class MySQL(object):
             % (acID, 5, cash, timestamp, account)) <= 0:
             self.__conn.rollback()
             return False, "insert transfer in value failed!"
-        if self.__cur.execute("select total from total where id=%s" % account) <= 0:
+        if self.__cur.execute("select total from total where id=%s" % acID) <= 0:
             self.__conn.rollback()
             return False, "there is not transfer-in ID's total record!"
         acTotal = self.__cur.fetchone()[0]
