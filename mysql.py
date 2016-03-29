@@ -52,8 +52,8 @@ class MySQL(object):
         if self.__cur.execute("select count(*) from bank.user where id=%s and name='%s'" % (acID, acName)) <= 0:
             self.__conn.rollback()
             return False, "the name and id is not match about the accept ID"
-        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
-            % (account, 4, cash, timestamp)) <= 0:
+        if self.__cur.execute("insert into detail (id, type, cash, timestamp, transferid) values(%s, %d, %f, %s, %s)" \
+            % (account, 4, cash, timestamp, acID)) <= 0:
             self.__conn.rollback()
             return False, "insert transfer out value failed!"
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
@@ -66,15 +66,15 @@ class MySQL(object):
         if self.__cur.execute("update total set total=%f where id=%s" % (total - cash, account)) <= 0:
             self.__conn.rollback()
             return False, "transfer out total can't be update"
-        if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
-            % (acID, 5, cash, timestamp)) <= 0:
+        if self.__cur.execute("insert into detail (id, type, cash, timestamp, transferid) values(%s, %d, %f, %s, %s)" \
+            % (acID, 5, cash, timestamp, account)) <= 0:
             self.__conn.rollback()
             return False, "insert transfer in value failed!"
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
             self.__conn.rollback()
             return False, "there is not transfer-in ID's total record!"
         acTotal = self.__cur.fetchone()[0]
-        if self.__cur.execute("update total set total=%f where id=%s" % (acTotal + cash, account)) <= 0:
+        if self.__cur.execute("update total set total=%f where id=%s" % (acTotal + cash, acID)) <= 0:
             self.__conn.rollback()
             return False, "transfer in total can't be update"
         self.__conn.commit()

@@ -62,8 +62,8 @@ while  True:
 			resData.append({
 				"type": item[1],
 				"cash": item[2],
-				"timestamp": item[3],
-				"transferid": item[4]
+				"timestamp": item[4],
+				"transferid": item[3]
 				})
 	res["data"] = resData
 	requestQ.set("%s_%s" % (account, timestamp), json.dumps(res))
