@@ -18,7 +18,7 @@ while  True:
 		res = {"status":0, "errorMsg":"", "data": None}
 		resData = {"sum": 0}
 		reqJson = json.loads(req)
-		tradeType = reqJson.get("type")
+		tradeType = int(reqJson.get("type"))
 		account = reqJson.get("id")
 		pw = reqJson.get("pw")
 		timestamp = reqJson.get("timestamp")
