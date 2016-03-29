@@ -17,17 +17,17 @@ class MySQL(object):
         if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (account, 2, cash, timestamp)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "insert value failed!"
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "there is not total record!"
         total = self.__cur.fetchone()[0]
         if (total - cash) < 0:
             self.__conn.rollback()
-            return False, None
+            return False, "there is not enough money to withdraw"
         if self.__cur.execute("update total set total=%s where id=%f" % (account, total - cash)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "total can't be update!"
         self.__conn.commit()
         return True, total - cash
         
@@ -36,14 +36,14 @@ class MySQL(object):
         if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (account, 3, cash, timestamp)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "insert value failed!"
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "there is not total record!"
         total = self.__cur.fetchone()[0]
         if self.__cur.execute("update total set total=%s where id=%f" % (account, total + cash)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "total can't be update!"
         self.__conn.commit()
         return True, total + cash
 
@@ -51,32 +51,32 @@ class MySQL(object):
     def transfer(self, account, cash, timestamp, acID, acName):
         if self.__cur.execute("select count(*) from user where id=%s and name=%s" % (acID, acName)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "the name and id is not match about the accept ID"
         if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (account, 4, cash, timestamp)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "insert transfer out value failed!"
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "there is not transfer-out ID's total record!"
         total = self.__cur.fetchone()[0]
         if (total - cash) < 0:
             self.__conn.rollback()
-            return False, None
+            return False, "there is not enough money to transfer"
         if self.__cur.execute("update total set total=%s where id=%f" % (account, total - cash)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "transfer out total can't be update"
         if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
             % (acID, 5, cash, timestamp)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "insert transfer in value failed!"
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "there is not transfer-in ID's total record!"
         acTotal = self.__cur.fetchone()[0]
         if self.__cur.execute("update total set total=%s where id=%f" % (account, acTotal + cash)) <= 0:
             self.__conn.rollback()
-            return False, None
+            return False, "transfer in total can't be update"
         self.__conn.commit()
         return True, total - cash
 

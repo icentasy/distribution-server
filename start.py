@@ -13,7 +13,7 @@ while  True:
 	req = requestQ.get()
 	if req is None:
 		continue
-	print "get sources"
+	print req
 	res = {"status":0, "errorMsg":"", "data": None}
 	resData = {"sum": 0}
 	reqJson = json.loads(req)
@@ -28,19 +28,28 @@ while  True:
 		cash = data.get("cash")
 		status, total = con.withdraw(account, cash, timestamp)
 		res["status"] = status
-		resData["sum"] = total
+		if status:
+			resData["sum"] = total
+		else:
+			res["errorMsg"] = total
 	elif tradeType == 3:
 		cash = data.get("cash")
 		status, total = con.deposite(account, cash, timestamp)
 		res["status"] = status
-		resData["sum"] = total
+		if status:
+			resData["sum"] = total
+		else:
+			res["errorMsg"] = total
 	elif tradeType == 4:
 		cash = data.get("cash")
 		acID = data.get("acID")
 		acName = data.get("acName")
 		status, total = con.transfer(account, cash, timestamp, acID, acName)
 		res["status"] = status
-		resData["sum"] = total
+		if status:
+			resData["sum"] = total
+		else:
+			res["errorMsg"] = total
 	elif tradeType == 6:
 		status, total = con.checkTotal(account)
 		res["status"] = status
