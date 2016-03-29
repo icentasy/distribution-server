@@ -26,7 +26,7 @@ while  True:
 		if tradeType == 0:
 			res["status"] = con.login(account, pw)
 		elif tradeType == 2:
-			cash = data.get("cash")
+			cash = float(data.get("cash"))
 			status, total = con.withdraw(account, cash, timestamp)
 			res["status"] = status
 			if status:
@@ -34,7 +34,7 @@ while  True:
 			else:
 				res["errorMsg"] = total
 		elif tradeType == 3:
-			cash = data.get("cash")
+			cash = float(data.get("cash"))
 			status, total = con.deposite(account, cash, timestamp)
 			res["status"] = status
 			if status:
@@ -42,7 +42,7 @@ while  True:
 			else:
 				res["errorMsg"] = total
 		elif tradeType == 4:
-			cash = data.get("cash")
+			cash = float(data.get("cash"))
 			acID = data.get("acID")
 			acName = data.get("acName")
 			status, total = con.transfer(account, cash, timestamp, acID, acName)
@@ -62,7 +62,7 @@ while  True:
 			for item in detail:
 				resData.append({
 					"type": item[1],
-					"cash": item[2],
+					"cash": str(item[2]),
 					"timestamp": item[4],
 					"transferid": item[3]
 					})
@@ -70,6 +70,9 @@ while  True:
 		requestQ.set("%s_%s" % (account, timestamp), json.dumps(res))
 	except Exception as e:
 		print e
-		continue
+		if account is not None and timestamp is not None:
+			res["status"] = False
+			res["errorMsg"] = e.message
+			requestQ.set("%s_%s" % (account, timestamp), json.dumps(res))
 
 

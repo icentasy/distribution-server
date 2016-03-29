@@ -29,7 +29,7 @@ class MySQL(object):
             self.__conn.rollback()
             return False, "total can't be update!"
         self.__conn.commit()
-        return True, total - cash
+        return True, str(total - cash)
         
 
     def deposite(self, account, cash, timestamp):
@@ -45,7 +45,7 @@ class MySQL(object):
             self.__conn.rollback()
             return False, "total can't be update!"
         self.__conn.commit()
-        return True, total + cash
+        return True, str(total + cash)
 
 
     def transfer(self, account, cash, timestamp, acID, acName):
@@ -78,12 +78,12 @@ class MySQL(object):
             self.__conn.rollback()
             return False, "transfer in total can't be update"
         self.__conn.commit()
-        return True, total - cash
+        return True, str(total - cash)
 
     def checkTotal(self, account):
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
             return False, 0
-        return True, self.__cur.fetchone()[0]
+        return True, str(self.__cur.fetchone()[0])
         
     def checkDetail(self, account):
         if self.__cur.execute("select * from detail where id=%s" % account) <= 0:
