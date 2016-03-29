@@ -25,7 +25,7 @@ class MySQL(object):
         if (total - cash) < 0:
             self.__conn.rollback()
             return False, "there is not enough money to withdraw"
-        if self.__cur.execute("update total set total=%s where id=%f" % (account, total - cash)) <= 0:
+        if self.__cur.execute("update total set total=%f where id=%s" % (total - cash, account)) <= 0:
             self.__conn.rollback()
             return False, "total can't be update!"
         self.__conn.commit()
@@ -41,7 +41,7 @@ class MySQL(object):
             self.__conn.rollback()
             return False, "there is not total record!"
         total = self.__cur.fetchone()[0]
-        if self.__cur.execute("update total set total=%s where id=%f" % (account, total + cash)) <= 0:
+        if self.__cur.execute("update total set total=%f where id=%s" % (total + cash, account)) <= 0:
             self.__conn.rollback()
             return False, "total can't be update!"
         self.__conn.commit()
@@ -63,7 +63,7 @@ class MySQL(object):
         if (total - cash) < 0:
             self.__conn.rollback()
             return False, "there is not enough money to transfer"
-        if self.__cur.execute("update total set total=%s where id=%f" % (account, total - cash)) <= 0:
+        if self.__cur.execute("update total set total=%f where id=%s" % (total - cash, account)) <= 0:
             self.__conn.rollback()
             return False, "transfer out total can't be update"
         if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
@@ -74,7 +74,7 @@ class MySQL(object):
             self.__conn.rollback()
             return False, "there is not transfer-in ID's total record!"
         acTotal = self.__cur.fetchone()[0]
-        if self.__cur.execute("update total set total=%s where id=%f" % (account, acTotal + cash)) <= 0:
+        if self.__cur.execute("update total set total=%f where id=%s" % (acTotal + cash, account)) <= 0:
             self.__conn.rollback()
             return False, "transfer in total can't be update"
         self.__conn.commit()
