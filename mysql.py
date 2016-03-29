@@ -49,7 +49,7 @@ class MySQL(object):
 
 
     def transfer(self, account, cash, timestamp, acID, acName):
-        if self.__cur.execute("select count(*) from bank.user where id=%s and name=%s" % (acID, acName)) <= 0:
+        if self.__cur.execute("select count(*) from bank.user where id=%s and name='%s'" % (acID, acName)) <= 0:
             self.__conn.rollback()
             return False, "the name and id is not match about the accept ID"
         if self.__cur.execute("insert into detail (id, type, cash, timestamp) values(%s, %d, %f, %s)" \
