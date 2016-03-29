@@ -14,6 +14,8 @@ while  True:
 	if req is None:
 		continue
 	print req
+	account = None
+	timestamp = None
 	try:
 		res = {"status":0, "errorMsg":"", "data": None}
 		resData = {"sum": 0}
