@@ -61,7 +61,7 @@ while  True:
 			resData = []
 			for item in detail:
 				resData.append({
-					"type": item[1],
+					"type": str(item[1]),
 					"cash": str(item[2]),
 					"timestamp": item[4],
 					"transferid": item[3]
