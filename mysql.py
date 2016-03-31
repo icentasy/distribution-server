@@ -82,10 +82,14 @@ class MySQL(object):
 
     def checkTotal(self, account):
         if self.__cur.execute("select total from total where id=%s" % account) <= 0:
+            self.__con.commit()
             return False, 0
+        self.__con.commit();
         return True, str(self.__cur.fetchone()[0])
         
     def checkDetail(self, account):
         if self.__cur.execute("select * from detail where id=%s" % account) <= 0:
+            self.__con.commit();
             return False, None
+        self.__con.commit();
         return True, self.__cur.fetchall()
